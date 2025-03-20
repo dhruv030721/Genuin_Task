@@ -31,13 +31,11 @@ class GroupCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Left content column
           Expanded(
             flex: 3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Group name and posted by information
                 Text(
                   group.groupName,
                   style: TextStyle(
@@ -54,8 +52,6 @@ class GroupCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 12),
-                
-                // Collaborators avatars
                 SizedBox(
                   height: 28,
                   child: Stack(
@@ -89,7 +85,6 @@ class GroupCard extends StatelessWidget {
                   ),
                 ),
                 
-                // Workspace section
                 SizedBox(height: 12),
                 Text(
                   "Workspace",
@@ -110,16 +105,14 @@ class GroupCard extends StatelessWidget {
               ],
             ),
           ),
-          
-          // Right image section with overlapping images
           Expanded(
             flex: 2,
             child: Container(
-              height: totalStackHeight, // Dynamically calculated height
+              height: totalStackHeight, 
               child: Stack(
-                alignment: Alignment.topRight, // Align all images to the top right
+                alignment: Alignment.topRight, 
                 children: [
-                  // Generate overlapping images
+                  
                   for (int index = 0; index < imageCount; index++)
                     Positioned(
                       right: index * overlapOffset,

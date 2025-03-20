@@ -24,7 +24,7 @@ class MemberCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundColor: Colors.grey.shade300, // Fallback background color
+            backgroundColor: Colors.grey.shade300, 
             child: ClipOval(
               child: Image.network(
                 imageUrl,

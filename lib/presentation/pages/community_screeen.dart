@@ -18,8 +18,10 @@ class CommunityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          CommunityBloc(CommunityRepository())..add(FetchCommunityData(communityId)),
+      create:
+          (context) =>
+              CommunityBloc(CommunityRepository())
+                ..add(FetchCommunityData(communityId)),
       child: BlocBuilder<CommunityBloc, CommunityState>(
         builder: (context, state) {
           if (state is CommunityLoading) {
@@ -77,7 +79,9 @@ class CommunityScreen extends StatelessWidget {
                               backgroundColor: Colors.black,
                               child: Center(
                                 child: Text(
-                                  communityData.name.substring(0, 3).toUpperCase(),
+                                  communityData.name
+                                      .substring(0, 3)
+                                      .toUpperCase(),
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -123,7 +127,9 @@ class CommunityScreen extends StatelessWidget {
                                   ),
                                   child: Text(
                                     'Join',
-                                    style: TextStyle(fontWeight: FontWeight.w900),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(width: 8),
@@ -141,9 +147,18 @@ class CommunityScreen extends StatelessWidget {
                             SizedBox(height: 16),
                             Row(
                               children: [
-                                InfoTile(count: communityData.no_of_members, label: 'Members'),
-                                InfoTile(count: communityData.no_of_groups, label: 'Groups'),
-                                InfoTile(count: communityData.no_of_videos, label: 'Videos'),
+                                InfoTile(
+                                  count: communityData.no_of_members,
+                                  label: 'Members',
+                                ),
+                                InfoTile(
+                                  count: communityData.no_of_groups,
+                                  label: 'Groups',
+                                ),
+                                InfoTile(
+                                  count: communityData.no_of_videos,
+                                  label: 'Videos',
+                                ),
                               ],
                             ),
                           ],

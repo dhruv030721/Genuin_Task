@@ -26,7 +26,14 @@ class _ReelPlayerState extends State<ReelPlayer> {
         setState(() {});
         _controller.play();
       });
-    _controller.setLooping(true);
+
+    // Listen for video end and replay manually
+    _controller.addListener(() {
+      if (_controller.value.position >= _controller.value.duration) {
+        _controller.seekTo(Duration.zero);
+        _controller.play();
+      }
+    });
   }
 
   @override
@@ -41,13 +48,14 @@ class _ReelPlayerState extends State<ReelPlayer> {
       children: [
         // Video Player
         Positioned.fill(
-            child: _controller.value.isInitialized
-                ? AspectRatio(
+          child:
+              _controller.value.isInitialized
+                  ? AspectRatio(
                     aspectRatio: _controller.value.aspectRatio,
                     child: VideoPlayer(_controller),
                   )
-                : const Center(child: CircularProgressIndicator()),
-          ),
+                  : const Center(child: CircularProgressIndicator()),
+        ),
 
         // Overlay UI Elements
         Positioned(
@@ -132,7 +140,10 @@ class _ReelPlayerState extends State<ReelPlayer> {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () => context.push('/community_screen/${widget.data.communityId}'),
+                    onTap:
+                        () => context.go(
+                          '/community_screen/${widget.data.communityId}',
+                        ),
                     child: Row(
                       children: [
                         CircleAvatar(
@@ -152,11 +163,8 @@ class _ReelPlayerState extends State<ReelPlayer> {
                       ],
                     ),
                   ),
-                  SizedBox(width: 10,),
-                  CircleAvatar(
-                    radius: 10,
-                    child: Icon(Icons.people, size: 15,),
-                  ),
+                  SizedBox(width: 10),
+                  CircleAvatar(radius: 10, child: Icon(Icons.people, size: 15)),
                   const SizedBox(width: 5),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5),

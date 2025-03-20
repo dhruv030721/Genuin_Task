@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:genuin_task/presentation/bloc/feed/feed_bloc.dart';
 import 'package:genuin_task/presentation/bloc/feed/feed_event.dart';
 import 'package:genuin_task/data/repositories/feed_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,13 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> getDeviceId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final device_id = prefs.getString('device_id');
+    if(device_id != null){
+      setState(() {
+        deviceId = device_id;
+      });
+    }
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     String? id;
 

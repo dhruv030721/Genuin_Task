@@ -10,7 +10,7 @@ class FeedRepository {
   Future<List<FeedData>> fetchFeedData(String deviceId) async {
     try {
       if (_cacheBox.containsKey('feed_cache')) {
-        print("Fetching data from cache...");
+        print("Fetching feed data from cache...");
         List<dynamic> cachedData = _cacheBox.get('feed_cache');
         print(cachedData);
         return cachedData.map((json) => FeedData.fromJson(Map<String, dynamic>.from(json))).toList();
