@@ -1,9 +1,20 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genuin_task/routes/app_routes.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'dart:io';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:genuin_task/presentation/bloc/feed/feed_bloc.dart';
+import 'package:genuin_task/presentation/bloc/feed/feed_event.dart';
+import 'package:genuin_task/data/repositories/feed_repository.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox('feed_cache');
+  await Hive.openBox('community_cache');
   runApp(const MyApp());
 }
 
@@ -26,7 +37,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> getDeviceId() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     String? id;
-    
+
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       id = androidInfo.id;
@@ -44,9 +55,25 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: router,
-      debugShowCheckedModeBanner: false,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create:
+              (context) =>
+                  FeedBloc(FeedRepository())
+                    ..add(FetchFeedData(deviceId ?? "")),
+        ),
+      ],
+      child: MaterialApp.router(
+        routerConfig: router,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          textTheme: GoogleFonts.dmSansTextTheme(),
+          progressIndicatorTheme: ProgressIndicatorThemeData(
+            color: Color.fromARGB(255, 55, 39, 200),
+          ),
+        ),
+      ),
     );
   }
 }

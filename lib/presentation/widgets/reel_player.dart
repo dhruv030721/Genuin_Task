@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:genuin_task/data/models/feed_data/feed_data.dart';
+import 'package:go_router/go_router.dart';
 import 'package:video_player/video_player.dart';
 
 class ReelPlayer extends StatefulWidget {
-  final String videoUrl;
+  final FeedData data;
 
-  const ReelPlayer({super.key, required this.videoUrl});
+  const ReelPlayer({super.key, required this.data});
 
   @override
   _ReelPlayerState createState() => _ReelPlayerState();
@@ -13,25 +15,18 @@ class ReelPlayer extends StatefulWidget {
 class _ReelPlayerState extends State<ReelPlayer> {
   late VideoPlayerController _controller;
   bool isLiked = false;
-  int likeCount = 120; // Dummy like count
-  int commentCount = 30; // Dummy comment count
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+    _controller = VideoPlayerController.networkUrl(
+        Uri.parse(widget.data.videoUrl),
+      )
       ..initialize().then((_) {
         setState(() {});
         _controller.play();
       });
-
-    // Listen for video end and replay manually
-    _controller.addListener(() {
-      if (_controller.value.position >= _controller.value.duration) {
-        _controller.seekTo(Duration.zero);
-        _controller.play();
-      }
-    });
+    _controller.setLooping(true);
   }
 
   @override
@@ -40,24 +35,19 @@ class _ReelPlayerState extends State<ReelPlayer> {
     super.dispose();
   }
 
-  void toggleLike() {
-    setState(() {
-      isLiked = !isLiked;
-      likeCount += isLiked ? 1 : -1;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         // Video Player
         Positioned.fill(
-          child:
-              _controller.value.isInitialized
-                  ? VideoPlayer(_controller)
-                  : const Center(child: CircularProgressIndicator()),
-        ),
+            child: _controller.value.isInitialized
+                ? AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  )
+                : const Center(child: CircularProgressIndicator()),
+          ),
 
         // Overlay UI Elements
         Positioned(
@@ -70,7 +60,6 @@ class _ReelPlayerState extends State<ReelPlayer> {
 
               // Like Button
               GestureDetector(
-                onTap: toggleLike,
                 child: Column(
                   children: [
                     Icon(
@@ -79,7 +68,7 @@ class _ReelPlayerState extends State<ReelPlayer> {
                       size: 32,
                     ),
                     Text(
-                      likeCount.toString(),
+                      widget.data.no_of_sparks.toString(),
                       style: const TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   ],
@@ -96,7 +85,7 @@ class _ReelPlayerState extends State<ReelPlayer> {
                   children: [
                     const Icon(Icons.comment, color: Colors.white, size: 32),
                     Text(
-                      commentCount.toString(),
+                      widget.data.no_of_comments.toString(),
                       style: const TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   ],
@@ -108,94 +97,79 @@ class _ReelPlayerState extends State<ReelPlayer> {
 
         // Username & Caption
         Positioned(
-  bottom: 20,
-  left: 15,
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      // Profile Image with Username
-      Row(
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundImage: NetworkImage(
-              "https://i.pravatar.cc/150?img=3", // Dummy profile image
-            ),
-          ),
-          const SizedBox(width: 10),
-          const Text(
-            "@username", // Dummy username
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-      
-      const SizedBox(height: 8), // Spacing between username and caption
-
-      // Caption
-      const Text(
-        "This is a sample caption for the video...",
-        style: TextStyle(color: Colors.white, fontSize: 14),
-      ),
-
-      const SizedBox(height: 8), // Spacing between caption and community tags
-
-      // Community Name Containers
-      Row(
-        children: [
-          // Community Tag 1
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5), // Semi-transparent black background
-              borderRadius: BorderRadius.circular(20), // Rounded edges
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 10,
-                  backgroundImage: NetworkImage(
-                    "https://i.pravatar.cc/150?img=3", // Dummy profile image
+          bottom: 20,
+          left: 15,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Profile Image with Username
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(
+                      "https://media.qa.begenuin.com/uploads/brands/web_logo/brandWebLogo_1741337031738.png",
+                    ),
                   ),
-                ),
-                const SizedBox(width: 5),
-                const Text('Community Name', style: TextStyle(color: Colors.white)),
-              ],
-            ),
-          ),
-
-          const SizedBox(width: 10), // Spacing between two community tags
-
-          // Community Tag 2
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5), // Semi-transparent black background
-              borderRadius: BorderRadius.circular(20), // Rounded edges
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 10,
-                  backgroundImage: NetworkImage(
-                    "https://i.pravatar.cc/150?img=3", // Dummy profile image
+                  const SizedBox(width: 10),
+                  Text(
+                    widget.data.ownerName,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 5),
-                const Text('Community Name', style: TextStyle(color: Colors.white)),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ],
-  ),
-),
+                ],
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                "This is a sample caption for the video...",
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
 
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => context.push('/community_screen/${widget.data.communityId}'),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 10,
+                          backgroundImage: NetworkImage(
+                            widget.data.communityLogo,
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Text(
+                            widget.data.communityName,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 10,),
+                  CircleAvatar(
+                    radius: 10,
+                    child: Icon(Icons.people, size: 15,),
+                  ),
+                  const SizedBox(width: 5),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(
+                      widget.data.loopName,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
