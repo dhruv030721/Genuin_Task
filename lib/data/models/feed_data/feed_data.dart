@@ -37,6 +37,11 @@ class FeedData extends HiveObject {
   @HiveField(10)
   final int no_of_sparks;
 
+  @HiveField(11)
+  final String profile_image;
+
+  @HiveField(12)
+  final String share_url;
 
   FeedData({
     required this.communityName,
@@ -50,6 +55,8 @@ class FeedData extends HiveObject {
     required this.no_of_views,
     required this.no_of_comments,
     required this.no_of_sparks,
+    required this.profile_image,
+    required this.share_url
   });
 
   factory FeedData.fromJson(Map<String, dynamic> json) {
@@ -65,6 +72,8 @@ class FeedData extends HiveObject {
       no_of_comments: json['video']['no_of_comments'] ?? 0,
       no_of_sparks: json['video']['no_of_sparks'] ?? 0,
       no_of_views: json['video']['no_of_views'] ?? 0,
+      profile_image: json['owner']['profile_image'] ?? '',
+      share_url: json['video']['share_url'] ?? ''
     );
   }
 }

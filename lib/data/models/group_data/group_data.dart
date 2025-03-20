@@ -33,19 +33,25 @@ class GroupData {
   }
 
   factory GroupData.fromJson(Map<String, dynamic> json) {
-    return GroupData(
-      groupName: json['group']['group_name'] ?? '',
-      lastPostedBy: json['latest_messages'][0]['owner']['username']
-          ?? '',
-      groupCollaborators: (json['group']['members'] as List)
-          .map((e) => MemberData.fromJson(e))
-          .toList(),
-      groupDescription: json['group']['group_description'] ?? '',
-      recentPosts: (json['latest_messages'] as List)
-          .map((e) => RecentPost.fromJson(e))
-          .toList(),
-    );
+  final group = json['group'] as Map<String, dynamic>? ?? {};
+  final latestMessages = json['latest_messages'] as List<dynamic>? ?? [];
+  
+  String lastPostedBy = 'No Posts';
+  if (latestMessages.isNotEmpty) {
+    final owner = latestMessages[0]['owner'] as Map<String, dynamic>? ?? {};
+    lastPostedBy = owner['username'] ?? 'Unknown User';
   }
+  
+  return GroupData(
+    groupName: group['group_name'] ?? 'Unknown Group',
+    lastPostedBy: lastPostedBy,
+    groupCollaborators: (group['members'] as List<dynamic>? ?? [])
+        .map((e) => MemberData.fromJson(e))
+        .toList(),
+    groupDescription: group['group_description'] ?? 'No Description',
+    recentPosts: latestMessages.map((e) => RecentPost.fromJson(e)).toList(),
+  );
+}
 }
 
 @HiveType(typeId: 2)
@@ -66,10 +72,12 @@ class RecentPost {
   });
 
   factory RecentPost.fromJson(Map<String, dynamic> json) {
-    return RecentPost(
-      messageId: json['message_id'] ?? '',
-      postedBy: json['owner']['username'] ?? '',
-      thumbnailUrl: json['thumbnail_url'] ?? '',
-    );
-  }
+  final owner = json['owner'] as Map<String, dynamic>? ?? {};
+  
+  return RecentPost(
+    messageId: json['message_id'] ?? '',
+    postedBy: owner['username'] ?? '',
+    thumbnailUrl: json['thumbnail_url'] ?? '',
+  );
+}
 }

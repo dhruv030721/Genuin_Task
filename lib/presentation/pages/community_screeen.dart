@@ -8,15 +8,24 @@ import 'package:genuin_task/presentation/pages/tabs/group_tab.dart';
 import 'package:genuin_task/presentation/pages/tabs/member_tab.dart';
 import 'package:genuin_task/presentation/widgets/info_tile.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-
+import 'package:share_plus/share_plus.dart';
 class CommunityScreen extends StatelessWidget {
   final String communityId;
 
   CommunityScreen({required this.communityId});
 
+  void _shareContent(String link) async {
+  try {
+    await Share.share(link);
+  } catch (e) {
+    print("Error sharing content: $e");
+  }
+}
+
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return BlocProvider(
       create:
           (context) =>
@@ -31,7 +40,6 @@ class CommunityScreen extends StatelessWidget {
             );
           } else if (state is CommunityLoaded) {
             final communityData = state.communityData;
-
             return Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
@@ -67,8 +75,16 @@ class CommunityScreen extends StatelessWidget {
                             height: 120,
                             width: double.infinity,
                             child: Image.network(
-                              'https://media.licdn.com/dms/image/v2/D4D16AQHdOQIQNRny1g/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1737859889124?e=1747872000&v=beta&t=rUzeJ7XPLawNZtKOtcgLh2YtUE-5fIfr65jxYQpnGx0',
-                              fit: BoxFit.fill,
+                              communityData.banner.isNotEmpty
+                                  ? communityData.banner
+                                  : 'https://media.licdn.com/dms/image/v2/D4D16AQHdOQIQNRny1g/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1737859889124?e=1747872000&v=beta&t=rUzeJ7XPLawNZtKOtcgLh2YtUE-5fIfr65jxYQpnGx0',
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.network(
+                                  'https://media.licdn.com/dms/image/v2/D4D16AQHdOQIQNRny1g/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1737859889124?e=1747872000&v=beta&t=rUzeJ7XPLawNZtKOtcgLh2YtUE-5fIfr65jxYQpnGx0',
+                                  fit: BoxFit.contain,
+                                );
+                              },
                             ),
                           ),
                           Positioned(
@@ -78,15 +94,11 @@ class CommunityScreen extends StatelessWidget {
                               radius: 40,
                               backgroundColor: Colors.black,
                               child: Center(
-                                child: Text(
-                                  communityData.name
-                                      .substring(0, 3)
-                                      .toUpperCase(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(100),
                                   ),
+                                  child: Image.network(communityData.logo),
                                 ),
                               ),
                             ),
@@ -94,7 +106,6 @@ class CommunityScreen extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 50),
-
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Column(
@@ -133,12 +144,30 @@ class CommunityScreen extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(width: 8),
-                                Icon(Icons.share_outlined, color: Colors.black),
+                                OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    side: BorderSide(
+                                      color: Color.fromARGB(255, 55, 39, 200),
+                                    ), // Blue border
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        8,
+                                      ), 
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    _shareContent(communityData.share_url);
+                                  },
+                                  child: Icon(
+                                    Icons.reply_all, 
+                                    color: Color.fromARGB(255, 55, 39, 200), 
+                                  ),
+                                ),
                               ],
                             ),
                             SizedBox(height: 8),
                             Text(
-                              communityData.bio,
+                              communityData.description,
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 14,
@@ -151,10 +180,12 @@ class CommunityScreen extends StatelessWidget {
                                   count: communityData.no_of_members,
                                   label: 'Members',
                                 ),
+                                SizedBox(width: screenWidth * 0.05),
                                 InfoTile(
                                   count: communityData.no_of_groups,
                                   label: 'Groups',
                                 ),
+                                SizedBox(width: screenWidth * 0.05),
                                 InfoTile(
                                   count: communityData.no_of_videos,
                                   label: 'Videos',
@@ -164,7 +195,6 @@ class CommunityScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-
                       SizedBox(height: 12),
                       Container(
                         height: 50,
@@ -176,17 +206,26 @@ class CommunityScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        child: TabBar(
-                          indicatorColor: Colors.blue,
-                          labelColor: Colors.black,
-                          unselectedLabelColor: Colors.grey,
-                          indicatorSize: TabBarIndicatorSize.label,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                        child: SizedBox(
+                          width: screenWidth * 0.6,
+                          child: TabBar(
+                            dividerHeight: 0,
+                            indicatorColor: Color.fromARGB(255, 55, 39, 200),
+                            labelColor: Colors.black,
+                            unselectedLabelColor: Colors.grey,
+                            indicatorSize: TabBarIndicatorSize.label,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            tabs: [Tab(text: 'Groups'), Tab(text: 'Members')],
                           ),
-                          tabs: [Tab(text: 'Groups'), Tab(text: 'Members')],
                         ),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 3,
+                        child: Container(color: Colors.grey.shade200),
                       ),
                       Expanded(
                         child: TabBarView(

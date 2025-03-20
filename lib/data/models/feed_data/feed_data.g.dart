@@ -28,13 +28,15 @@ class FeedDataAdapter extends TypeAdapter<FeedData> {
       no_of_views: fields[7] as int,
       no_of_comments: fields[8] as int,
       no_of_sparks: fields[10] as int,
+      profile_image: fields[11] as String,
+      share_url: fields[12] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, FeedData obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.communityName)
       ..writeByte(1)
@@ -56,7 +58,11 @@ class FeedDataAdapter extends TypeAdapter<FeedData> {
       ..writeByte(9)
       ..write(obj.communityId)
       ..writeByte(10)
-      ..write(obj.no_of_sparks);
+      ..write(obj.no_of_sparks)
+      ..writeByte(11)
+      ..write(obj.profile_image)
+      ..writeByte(12)
+      ..write(obj.share_url);
   }
 
   @override

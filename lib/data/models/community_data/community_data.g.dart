@@ -20,31 +20,37 @@ class CommunityDataAdapter extends TypeAdapter<CommunityData> {
       name: fields[0] as String,
       logo: fields[1] as String,
       handle: fields[2] as String,
-      bio: fields[3] as String,
       no_of_videos: fields[4] as int,
       no_of_groups: fields[5] as int,
       no_of_members: fields[6] as int,
+      description: fields[7] as String,
+      share_url: fields[8] as String,
+      banner: fields[9] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, CommunityData obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
       ..write(obj.logo)
       ..writeByte(2)
       ..write(obj.handle)
-      ..writeByte(3)
-      ..write(obj.bio)
       ..writeByte(4)
       ..write(obj.no_of_videos)
       ..writeByte(5)
       ..write(obj.no_of_groups)
       ..writeByte(6)
-      ..write(obj.no_of_members);
+      ..write(obj.no_of_members)
+      ..writeByte(7)
+      ..write(obj.description)
+      ..writeByte(8)
+      ..write(obj.share_url)
+      ..writeByte(9)
+      ..write(obj.banner);
   }
 
   @override

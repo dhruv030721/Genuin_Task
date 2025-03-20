@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MemberCard extends StatelessWidget {
   final String username;
@@ -16,27 +17,32 @@ class MemberCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+      padding: EdgeInsets.all(screenWidth * 0.015),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(screenWidth * 0.02),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.grey.shade300, 
+            radius: screenWidth * 0.05,
+            backgroundColor: Colors.grey.shade300,
             child: ClipOval(
               child: Image.network(
                 imageUrl,
                 fit: BoxFit.cover,
+                width: screenWidth * 0.10,
+                height: screenWidth * 0.10,
                 errorBuilder: (context, error, stackTrace) {
-                  return Icon(Icons.person, size: 24, color: Colors.grey);
+                  return Icon(Icons.person, size: screenWidth * 0.05, color: Colors.grey);
                 },
               ),
             ),
           ),
-
-          SizedBox(width: 10),
+          SizedBox(width: screenWidth * 0.025),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,15 +50,25 @@ class MemberCard extends StatelessWidget {
               children: [
                 Text(
                   '@$username',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w800,
+                    fontSize: screenWidth * 0.035,
+                  ),
                 ),
                 Text(
                   fullName,
-                  style: TextStyle(fontSize: 12, color: Colors.black54),
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.04,
+                    color: Colors.black54,
+                  ),
                 ),
                 Text(
                   bio,
-                  style: TextStyle(fontSize: 12, color: Colors.black54),
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.03,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
                 ),
               ],
             ),
