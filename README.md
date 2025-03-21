@@ -16,7 +16,7 @@
 
 Ensure a smooth and engaging user experience with optimized performance and seamless navigation. 🚀
 
-## 📱 Optimized Performance & State Management
+## Optimized Performance & State Management
 
 ### ⚡ Features & Advantages
 
@@ -27,4 +27,4 @@ This project is designed for high performance, reliability, and scalability with
 - **Optimized Video Playback** with the `m3m8` file format enables smooth and efficient streaming for a better user experience.  
 - **Retry Mechanism** provides a robust solution for handling network failures, ensuring uninterrupted functionality.  
 
-By integrating these optimizations, the app ensures a seamless, high-performance experience while maintaining clean and maintainable code. 🚀
+By integrating these optimizations, the app ensures a seamless, high-performance experience while maintaining clean and maintainable code.
