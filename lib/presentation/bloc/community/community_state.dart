@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:genuin_task/data/models/community_data/community_data.dart';
 

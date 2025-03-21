@@ -1,10 +1,6 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:genuin_task/data/models/group_data/group_data.dart';
-import 'package:genuin_task/data/repositories/community_repository.dart';
 import 'package:genuin_task/data/repositories/community_repository.dart';
 import 'package:genuin_task/presentation/bloc/groups/groups_event.dart';
-import 'package:genuin_task/presentation/bloc/groups/groups_bloc.dart';
 import 'package:genuin_task/presentation/bloc/groups/groups_state.dart';
 
 class GroupBloc extends Bloc<GroupEvent, GroupState> {

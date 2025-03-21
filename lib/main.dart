@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genuin_task/routes/app_routes.dart';
@@ -11,7 +10,7 @@ import 'package:genuin_task/presentation/bloc/feed/feed_event.dart';
 import 'package:genuin_task/data/repositories/feed_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox('feed_cache');
@@ -57,8 +56,6 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       deviceId = id;
     });
-
-    print("Device ID: $deviceId");
   }
 
   @override

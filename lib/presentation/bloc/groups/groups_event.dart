@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:genuin_task/data/models/group_data/group_data.dart';
 
 abstract class GroupEvent extends Equatable {
   const GroupEvent();

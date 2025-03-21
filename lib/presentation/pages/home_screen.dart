@@ -20,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Run after the first frame is rendered
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkInternet();
     });

@@ -1,4 +1,3 @@
-import 'package:genuin_task/data/models/member_data/member_data.dart';
 import 'package:hive/hive.dart';
 
 part 'community_data.g.dart';
@@ -46,7 +45,6 @@ class CommunityData extends HiveObject {
   });
 
   factory CommunityData.fromJson(Map<String, dynamic> json) {
-    print(json);
     return CommunityData(
       name: json['name'] ?? '',
       logo: json['brand']['logo'] ?? '',

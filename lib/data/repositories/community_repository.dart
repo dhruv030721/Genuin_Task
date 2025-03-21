@@ -13,13 +13,13 @@ class CommunityRepository {
   final String memberApiUrl =
       'https://nodejs.qa.begenuin.com/api/v3/community/members?community_id=';
   final String groupApiUrl =
-      'https://nodejs.qa.begenuin.com/api/v3/community/loops?community_id=45b93125-cf12-4be8-9bd8-54284a7ba3f0';
+      'https://nodejs.qa.begenuin.com/api/v3/community/loops?community_id=';
 
   Future<CommunityData> fetchCommunityData(String communityId) async {
     String cacheKey = 'community_$communityId';
 
     if (_cacheBox.containsKey(cacheKey)) {
-      print("Fetching community data from cache...");
+      // Fetching community data from cache...
       final cachedData = Map<String, dynamic>.from(_cacheBox.get(cacheKey));
       return CommunityData.fromJson(cachedData);
     }
@@ -43,7 +43,7 @@ class CommunityRepository {
     String cacheKey = 'members_$communityId';
 
     if (_cacheBox.containsKey(cacheKey)) {
-      print("Fetching members from cache...");
+      // Fetching members from cache...
       List<dynamic> cachedData = _cacheBox.get(cacheKey);
       return cachedData
           .map((json) => MemberData.fromJson(Map<String, dynamic>.from(json)))
@@ -69,7 +69,7 @@ class CommunityRepository {
     String cacheKey = 'groups_$communityId';
 
     if (_cacheBox.containsKey(cacheKey)) {
-      print("Fetching groups from cache...");
+      // Fetching groups from cache...
       List<dynamic> cachedData = _cacheBox.get(cacheKey);
 
       try {
@@ -77,13 +77,12 @@ class CommunityRepository {
             .map((json) => GroupData.fromJson(Map<String, dynamic>.from(json)))
             .toList();
       } catch (e) {
-        print("Error parsing cached data: $e");
         _cacheBox.delete(cacheKey);
       }
     }
 
     try {
-      Response response = await _dio.get('$groupApiUrl');
+      Response response = await _dio.get('$groupApiUrl$communityId');
       if (response.statusCode == 200) {
         List<dynamic> groupList = response.data['data']['conversations'] ?? [];
 

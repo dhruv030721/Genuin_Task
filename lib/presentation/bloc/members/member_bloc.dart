@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:genuin_task/data/models/member_data/member_data.dart';
 import 'package:genuin_task/data/repositories/community_repository.dart';
 import 'member_event.dart';
 import 'member_state.dart';

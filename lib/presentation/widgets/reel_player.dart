@@ -3,6 +3,7 @@ import 'package:genuin_task/data/models/feed_data/feed_data.dart';
 import 'package:go_router/go_router.dart';
 import 'package:video_player/video_player.dart';
 import 'package:share_plus/share_plus.dart';
+
 class ReelPlayer extends StatefulWidget {
   final FeedData data;
 
@@ -41,17 +42,18 @@ class _ReelPlayerState extends State<ReelPlayer> {
     super.dispose();
   }
 
-   void _shareContent(String link) async {
-  try {
-    await Share.share(link);
-  } catch (e) {
-    print("Error sharing content: $e");
+  void _shareContent(String link) async {
+    try {
+      await Share.share(link);
+    } catch (e) {
+      print("Error sharing content: $e");
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    final screeWidth = MediaQuery.of(context).size.width;
 
     return Stack(
       children: [
@@ -83,9 +85,17 @@ class _ReelPlayerState extends State<ReelPlayer> {
                     color: Colors.white,
                     size: 32,
                   ),
-                  Text(
-                    widget.data.no_of_sparks.toString(),
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                  Row(
+                    children: [
+                      Text(
+                        widget.data.no_of_sparks.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                      SizedBox(width: screeWidth * 0.02,)
+                    ],
                   ),
                 ],
               ),
@@ -106,7 +116,12 @@ class _ReelPlayerState extends State<ReelPlayer> {
               SizedBox(height: screenHeight * 0.03),
               GestureDetector(
                 onTap: () => _shareContent(widget.data.share_url),
-                child: Icon(Icons.share_outlined, color: Colors.white, size: 32)),
+                child: Icon(
+                  Icons.share_outlined,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
               SizedBox(height: screenHeight * 0.03),
               Icon(Icons.more_horiz, color: Colors.white, size: 32),
             ],
